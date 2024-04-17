@@ -11,7 +11,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>jack-common</name>
+	<name>jsls</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
