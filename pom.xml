@@ -24,6 +24,9 @@
 		<shiro.version>1.7.1</shiro.version>
 		<spire.version>11.7.0</spire.version>
 	</properties>
+	<modules>
+		<module>jsls-core</module>
+	</modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
