@@ -10,20 +10,36 @@
 	<artifactId>jsls-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>jsls</name>
-	<url>http://maven.apache.org</url>
-
-	<properties>
+	<description>聚算流沙公共库</description>
+	<url>https://github.com/jusuanliusha/jsls</url>
+ 	<properties>
 		<java.version>1.8</java.version>
-    	<maven.compiler.source>${java.version}</maven.compiler.source>
-    	<maven.compiler.target>${java.version}</maven.compiler.target>
+		<resource.delimiter>@</resource.delimiter>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<poi.version>5.2.2</poi.version>
 		<mybatis.version>3.4.2</mybatis.version>
 		<shiro.version>1.7.1</shiro.version>
 		<spire.version>11.7.0</spire.version>
-	</properties>
+  	</properties>
+	<licenses>
+		<license>
+		<name>Apache License, Version 2.0</name>
+		<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+  	</licenses>
+	<developers>
+		<developer>
+			<name>jusuanliusha</name>
+			<email>jusuanliusha@foxmail.com</email>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/jusuanliusha/jsls</url>
+	</scm>
 	<modules>
 		<module>jsls-core</module>
 	</modules>
@@ -34,7 +50,7 @@
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>3.0.0</version>
             </dependency>
-            <dependency>
+            <!-- <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <scope>provided</scope>
@@ -43,7 +59,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <scope>test</scope>
-            </dependency>
+            </dependency> -->
         </dependencies>
     </dependencyManagement>
 	<build>
