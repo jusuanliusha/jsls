@@ -6,7 +6,7 @@
 		<version>2.3.9.RELEASE</version>
 		<relativePath />
 	</parent>
-	<groupId>org.jsls</groupId>
+	<groupId>com.jsls</groupId>
 	<artifactId>jsls-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -42,6 +42,14 @@
 	</scm>
 	<modules>
 		<module>jsls-core</module>
+		<module>jsls-common</module>
+		<module>jsls-system</module>
+		<module>jsls-message</module>
+		<module>jsls-content</module>
+		<module>jsls-account</module>
+		<module>jsls-mall</module>
+		<module>jsls-market</module>
+		<module>jsls-server</module>
 	</modules>
     <dependencyManagement>
         <dependencies>

@@ -6,11 +6,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>com.jsls</groupId>
-	<artifactId>jsls-core</artifactId>
+	<artifactId>jsls-mall</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>jsls-core</name>
+	<name>jsls-mall</name>
 	<url>https://github.com/jusuanliusha/jsls</url>
 
 	<properties>
