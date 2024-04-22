@@ -1,4 +1,4 @@
-package org.jsls.util;
+package com.jsls.util;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.jsls.util;
+package com.jsls.util;
 
 import java.io.BufferedReader;
 import java.io.File;

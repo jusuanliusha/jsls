@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
-import org.jsls.util.SpringContextHolder;
+import com.jsls.util.SpringContextHolder;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.util.CollectionUtils;
 

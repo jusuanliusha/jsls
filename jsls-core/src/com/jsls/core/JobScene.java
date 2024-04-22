@@ -1,9 +1,9 @@
-package org.jsls.core;
+package com.jsls.core;
 
 import java.text.ParseException;
 import java.util.Date;
 
-import org.jsls.util.DateUtils;
+import com.jsls.util.DateUtils;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 

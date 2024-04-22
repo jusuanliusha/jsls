@@ -1,4 +1,4 @@
-package org.jsls.util;
+package com.jsls.util;
 
 import java.util.Collection;
 import java.util.Objects;

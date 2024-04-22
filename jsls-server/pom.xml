@@ -38,6 +38,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jsls</groupId>
+			<artifactId>jsls-material</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
 			<artifactId>jsls-content</artifactId>
 		</dependency>
 		<dependency>

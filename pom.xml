@@ -47,6 +47,7 @@
 		<module>jsls-system</module>
 		<module>jsls-message</module>
 		<module>jsls-content</module>
+		<module>jsls-material</module>
 		<module>jsls-account</module>
 		<module>jsls-mall</module>
 		<module>jsls-market</module>
@@ -67,6 +68,11 @@
 			<dependency>
 				<groupId>com.jsls</groupId>
 				<artifactId>jsls-account</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-material</artifactId>
 				<version>${jsls.version}</version>
 			</dependency>
 			<dependency>
@@ -111,12 +117,4 @@
             </dependency> -->
         </dependencies>
     </dependencyManagement>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

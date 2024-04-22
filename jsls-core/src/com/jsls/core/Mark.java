@@ -1,4 +1,4 @@
-package org.jsls.core;
+package com.jsls.core;
 
 import java.util.HashSet;
 import java.util.Set;
