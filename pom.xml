@@ -10,9 +10,11 @@
 	<artifactId>jsls-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
 	<name>jsls</name>
-	<description>聚算流沙公共库</description>
 	<url>https://github.com/jusuanliusha/jsls</url>
+	<description>聚算流沙公共库</description>
+
  	<properties>
 		<java.version>1.8</java.version>
 		<resource.delimiter>@</resource.delimiter>
