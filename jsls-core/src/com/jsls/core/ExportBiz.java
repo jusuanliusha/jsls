@@ -163,7 +163,25 @@ public class ExportBiz {
     }
 
     /**
-     * 打包zip下载
+     * 批量导出后打包zip下载
+     * 
+     * @param exportBiz
+     * @param fileName
+     */
+    public static void downloadZip(HttpServletResponse response, String fileName, Collection<ExportBiz> exportBizList) {
+        ZipOutputStream zos = null;
+        try {
+            zos = ZipUtils.useZipOutputStream(useOutputStream(fileName, "zip", response));
+            for (ExportBiz exportBiz : exportBizList) {
+                exportBiz.toZip(zos, "");
+            }
+        } finally {
+            IOUtils.closeQuietly(zos);
+        }
+    }
+
+    /**
+     * 将导出的文件打包zip下载
      * 
      * @param exportBiz
      * @param fileName
@@ -211,7 +229,7 @@ public class ExportBiz {
         return out;
     }
 
-    public OutputStream useOutputStream(String fileName, String type, HttpServletResponse response) {
+    public static OutputStream useOutputStream(String fileName, String type, HttpServletResponse response) {
         if (StringUtils.hasText(fileName)) {
             WebUtils.downloadHeader(response, fileName);
         } else if ("pdf".equals(type)) {
