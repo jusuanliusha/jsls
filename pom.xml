@@ -24,6 +24,7 @@
 		<mybatis.version>3.4.2</mybatis.version>
 		<shiro.version>1.7.1</shiro.version>
 		<spire.version>11.7.0</spire.version>
+		<jsls.version>0.0.1-SNAPSHOT</jsls.version>
   	</properties>
 	<licenses>
 		<license>
@@ -53,7 +54,47 @@
 	</modules>
     <dependencyManagement>
         <dependencies>
-            <dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-market</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-mall</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-account</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-content</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-message</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-system</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-common</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jsls</groupId>
+				<artifactId>jsls-core</artifactId>
+				<version>${jsls.version}</version>
+			</dependency>
+			<dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>3.0.0</version>

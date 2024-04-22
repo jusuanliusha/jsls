@@ -25,6 +25,30 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-market</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-mall</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-account</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-content</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-message</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-system</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
 			<scope>provided</scope>

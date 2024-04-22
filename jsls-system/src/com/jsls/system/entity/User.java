@@ -1,5 +1,8 @@
 package com.jsls.system.entity;
 
-public class User {
+import java.io.Serializable;
+
+@Data
+public class User implements Serializable {
     
 }
