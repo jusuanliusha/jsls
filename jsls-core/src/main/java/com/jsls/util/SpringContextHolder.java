@@ -144,7 +144,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@SuppressWarnings("null") ApplicationContext applicationContext)
+            throws BeansException {
         if (SpringContextHolder.applicationContext != null) {
             log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:"
                     + SpringContextHolder.applicationContext);

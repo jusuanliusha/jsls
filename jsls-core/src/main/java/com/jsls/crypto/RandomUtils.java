@@ -25,6 +25,7 @@ public class RandomUtils {
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage(), e);
+            throw new RuntimeException("不支持的散列算法",e);
         }
         for (int i = 0; i < length; i++) {
             char tmp = (char) (33 + random.nextInt(93));
@@ -49,6 +50,7 @@ public class RandomUtils {
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage(), e);
+            throw new RuntimeException("不支持的散列算法",e);
         }
         for (int i = 0; i < length; i++) {
             sb.append(NUMBERCHAR.charAt(random.nextInt(NUMBERCHAR.length())));

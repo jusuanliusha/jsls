@@ -110,14 +110,17 @@ public class WordUtils {
             throws IOException, InvalidFormatException {
         XWPFDocument doc = new XWPFDocument(OPCPackage.open(in));
         List<XWPFParagraph> paragraphs = doc.getParagraphs();
-        if (paragraphs.size() < 1)
+        if (paragraphs.size() < 1){
+            doc.close();
             return;
+        }
         XWPFParagraph firstParagraph = paragraphs.get(0);
         if (firstParagraph.getText().contains("Spire.Doc")) {
             doc.removeBodyElement(doc.getPosOfParagraph(firstParagraph));
         }
         doc.write(out);
         out.close();
+        doc.close();
     }
 
     /**

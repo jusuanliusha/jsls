@@ -57,6 +57,7 @@ public interface Verifiable {
             }
             return Result.SUCCESS;
         }
+        @SuppressWarnings("unchecked")
         public <S> S getState(String key){
             return (S)stateMap.get(key);
         }
@@ -175,7 +176,7 @@ public interface Verifiable {
         public boolean contains(String v,String key,String message){
             return expect(v, key, (a,b)->a.contains(b), message);
         }
-        public <T> boolean contains(T v,String message,T...vals){
+        public <T> boolean contains(T v,String message,@SuppressWarnings("unchecked") T...vals){
             return expect(vals, v, (a,b)->{
                 for(T item:a){
                     if(b.equals(item)){

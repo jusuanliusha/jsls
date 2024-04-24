@@ -34,7 +34,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jxls.common.Context;
-import org.jxls.expression.JexlExpressionEvaluator;
 import org.jxls.transform.poi.PoiTransformer;
 import org.jxls.util.JxlsHelper;
 import org.slf4j.Logger;
@@ -56,6 +55,7 @@ import com.opencsv.CSVReaderBuilder;
 public class ExcelUtils {
     private static final Logger logger = LoggerFactory.getLogger(ExcelUtils.class);
 
+    @SuppressWarnings("null")
     public static List<List<String>> readExcel(MultipartFile file, String sheetName) throws IOException {
         String fileName = file.getOriginalFilename();
         if (StringUtils.hasText(fileName) && fileName.toLowerCase().endsWith(".csv")) {
@@ -425,6 +425,7 @@ public class ExcelUtils {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Result<List<Pair<Position, T>>> tableToModelList(List<Pair<Position, List<Object>>> list,
             Class<T> clazz, Map<String, String> headMap) {
         List<Pair<Position, T>> modelList = new ArrayList<Pair<Position, T>>();
@@ -626,6 +627,7 @@ public class ExcelUtils {
         return Result.success(propertyMap);
     }
 
+    @SuppressWarnings("unchecked")
     public static <B> Pair<Position, B> convertToBean(Pair<Position, List<Object>> rowData, Class<B> clazz,
             Map<Integer, String> propertyMap) {
         Pair<Position, B> rowBean = new Pair<>();

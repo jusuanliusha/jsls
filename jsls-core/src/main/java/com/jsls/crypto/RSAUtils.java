@@ -42,6 +42,7 @@ public class RSAUtils {
      * 
      * @param filePath
      */
+    @SuppressWarnings("null")
     public static void genKeyPair(String filePath) {
         // KeyPairGenerator类用于生成公钥和私钥对，基于RSA算法生成对象
         KeyPairGenerator keyPairGen = null;

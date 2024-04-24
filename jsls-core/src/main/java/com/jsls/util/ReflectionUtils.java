@@ -23,12 +23,14 @@ import org.springframework.util.ClassUtils;
 public class ReflectionUtils {
     /**
      * 获取常量定义并封装成map
+     * 
      * @param <T>
      * @param <D>
      * @param clazz
      * @param targetClass
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T, D> Map<String, D> getConstantMap(Class<T> clazz, Class<D> targetClass) {
         Field[] fields = clazz.getFields();
         Map<String, D> map = new HashMap<>();
@@ -107,6 +109,7 @@ public class ReflectionUtils {
         Set<Class<?>> classes = new HashSet<>();
         Set<BeanDefinition> candidates = scanner.findCandidateComponents(basePackage);
         for (BeanDefinition candidate : candidates) {
+            @SuppressWarnings("null")
             Class<?> clazz = ClassUtils.resolveClassName(candidate.getBeanClassName(),
                     ClassUtils.getDefaultClassLoader());
             classes.add(clazz);
