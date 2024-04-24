@@ -18,13 +18,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jsls.core.Timers;
 import com.jsls.core.Verifiable;
 
 public class WebUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
-
 
     public static void download(HttpServletResponse response, String fullUrl, String originalFilename) {
         HttpUtils.request(fullUrl, resp -> {
@@ -156,28 +154,6 @@ public class WebUtils {
             // ignore
         }
         return fileName;
-    }
-
-    public static String generateFileName(String originalFilename) {
-        return generateFileName(originalFilename, null);
-    }
-
-    public static String generateFileName(String originalFilename, String prefix) {
-        String timer = DateUtils.formatDate(Timers.uniqueDate(), "yyyyMMddHHmmssSSS");
-        boolean filePrefix = false;
-        if (!StringUtils.hasText(prefix)) {
-            filePrefix = true;
-            prefix = originalFilename;
-        }
-        String suffix = "";
-        int lastDotIndex = originalFilename.lastIndexOf(".");
-        if (lastDotIndex >= 0) {
-            if (filePrefix) {
-                prefix = originalFilename.substring(0, lastDotIndex);
-            }
-            suffix = originalFilename.substring(lastDotIndex).toLowerCase();
-        }
-        return prefix + "_" + timer + suffix;
     }
 
     public static boolean isAjax(HttpServletRequest request) {
