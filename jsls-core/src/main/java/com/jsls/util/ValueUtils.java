@@ -572,7 +572,7 @@ public class ValueUtils {
      * @param items
      * @return
      */
-    public static <D extends Comparable<D>> D min(D... items) {
+    public static <D extends Comparable<D>> D min(@SuppressWarnings("unchecked") D... items) {
         D use = null;
         if (items != null) {
             for (D item : items) {
@@ -593,7 +593,7 @@ public class ValueUtils {
      * @param items
      * @return
      */
-    public static <D extends Comparable<D>> D max(D... items) {
+    public static <D extends Comparable<D>> D max(@SuppressWarnings("unchecked") D... items) {
         D use = null;
         if (items != null) {
             for (D item : items) {
@@ -646,7 +646,7 @@ public class ValueUtils {
      * @param items
      * @return
      */
-    public static <D> D calculate(BiFunction<D, D, D> fn, D... items) {
+    public static <D> D calculate(BiFunction<D, D, D> fn, @SuppressWarnings("unchecked") D... items) {
         D use = null;
         if (items != null) {
             for (D item : items) {
@@ -997,7 +997,7 @@ public class ValueUtils {
         return pair;
     }
 
-    public static <T> boolean contains(T dest, T... array) {
+    public static <T> boolean contains(T dest, @SuppressWarnings("unchecked") T... array) {
         if (array == null || array.length == 0) {
             return false;
         }

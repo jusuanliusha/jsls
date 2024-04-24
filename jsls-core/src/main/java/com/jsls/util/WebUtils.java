@@ -179,21 +179,21 @@ public class WebUtils {
     public static String getIpAddr() {
         HttpServletRequest request = getRequest();
         String ip = request.getHeader("x-forwarded-for");
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (StringUtils.isEmpty(ip) || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
         try {
             String[] localhost = new String[] { "127.0.0.1", "0:0:0:0:0:0:0:1" };
-            if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+            if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
                 ip = request.getRemoteAddr();
                 if (Arrays.asList(localhost).contains(ip)) {
                     // 根据网卡取本机配置的IP
