@@ -186,7 +186,7 @@ public class ExportBiz {
         Map<String, Object> model = new HashMap<>();
         List<String> headList = Arrays.asList(headLine.trim().split("\\s+"));
         model.put("headList", headList);
-        exportExcel(model, fileName, "commonSimpleTemplate.xlsx");
+        exportExcel(model, fileName, "excel/commonSimpleTemplate.xlsx");
     }
 
     /**
