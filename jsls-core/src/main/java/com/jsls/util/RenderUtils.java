@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.util.ClassUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -41,35 +41,41 @@ public class RenderUtils {
 
     public static String freeMarkerRender(Object model, String templateName) {
         StringWriter sw = new StringWriter();
-        try {
-            freeMarkerRender(model, templateName, sw);
-            return sw.toString();
-        } catch (Exception e) {
-            logger.error("渲染模板失败：" + e.getMessage(), e);
-            throw new RuntimeException("渲染模板失败：" + e.getMessage(), e);
-        }
-
+        freeMarkerRender(model, templateName, sw);
+        return sw.toString();
     }
 
     public static void freeMarkerRender(Object model, String templateName, OutputStream os) {
         Writer out = new OutputStreamWriter(os, Charset.forName("utf-8"));
-        try {
-            freeMarkerRender(model, templateName, out);
-        } catch (Exception e) {
-            logger.error("渲染模板失败：" + e.getMessage(), e);
-            throw new RuntimeException("渲染模板失败：" + e.getMessage(), e);
-        }
+        freeMarkerRender(model, templateName, out);
     }
 
-    private static void freeMarkerRender(Object model, String templateName, Writer out)
-            throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException,
-            TemplateException {
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        String path = RenderUtils.class.getResource("/templates").toString();
-        freeMarkerConfigurer.setTemplateLoaderPath(path);
-        freeMarkerConfigurer.setDefaultEncoding("utf-8");
-        Configuration configuration = freeMarkerConfigurer.createConfiguration();
-        Template template = configuration.getTemplate(templateName);
-        template.process(model, out);
+    private static void freeMarkerRender(Object model, String templateName, Writer out) {
+        Configuration configuration = new Configuration(Configuration.VERSION_2_3_31);
+        configuration.setDefaultEncoding("utf-8");
+        configuration.setClassLoaderForTemplateLoading(ClassUtils.getDefaultClassLoader(), "/templates");
+        Template template;
+        try {
+            template = configuration.getTemplate(templateName);
+            template.process(model, out);
+        } catch (TemplateNotFoundException e) {
+            logger.error(templateName + " 模板不存在", e);
+            throw new RuntimeException(templateName + " 模板不存在", e);
+        } catch (MalformedTemplateNameException e) {
+            logger.error(templateName + " 模板不存在", e);
+            throw new RuntimeException(templateName + " 模板不存在", e);
+        } catch (ParseException e) {
+            logger.error("模板解析异常：" + e.getMessage(), e);
+            throw new RuntimeException("模板解析异常：" + e.getMessage(), e);
+        } catch (IOException e) {
+            logger.error("渲染模板失败：" + e.getMessage(), e);
+            throw new RuntimeException("渲染模板失败：" + e.getMessage(), e);
+        } catch (TemplateException e) {
+            logger.error("渲染模板失败：" + e.getMessage(), e);
+            throw new RuntimeException("渲染模板失败：" + e.getMessage(), e);
+        } finally {
+            IOUtils.closeQuietly(out);
+        }
+
     }
 }

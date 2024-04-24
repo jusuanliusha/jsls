@@ -14,24 +14,21 @@ import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
-import com.itextpdf.text.DocumentException;
 
-import com.jsls.util.StyleUtils;
-import com.jsls.util.WaterMarkUtils;
-import com.jsls.config.WaterMarkConfig;
-import com.jsls.util.ExcelUtils;
-import com.jsls.util.IOUtils;
-import com.jsls.util.PdfUtils;
-import com.jsls.util.RenderUtils;
-import com.jsls.util.SpringContextHolder;
-import com.jsls.util.WebUtils;
-import com.jsls.util.WordUtils;
-import com.jsls.util.ZipUtils;
+import org.apache.http.entity.ContentType;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import com.jsls.util.ExcelUtils;
+import com.jsls.util.IOUtils;
+import com.jsls.util.PdfUtils;
+import com.jsls.util.RenderUtils;
+import com.jsls.util.WebUtils;
+import com.jsls.util.WordUtils;
+import com.jsls.util.ZipUtils;
 
 import lombok.Data;
 
@@ -67,12 +64,11 @@ public class ExportBiz {
     private HttpServletResponse response;
     private String rootPath;
     private String subPath;
-    private String waterMark = WaterMarkConfig.DEFAULT_WATER_MARK;
+    private WaterMark waterMark = new WaterMark();
     private String password;
     private Map<String, String> templateMap = new HashMap<>();
     private Set<String> fileList = new HashSet<>();
 
- 
     public void responseFile(File file) {
         responseFile(file, null);
     }
@@ -83,24 +79,26 @@ public class ExportBiz {
         }
         responseFile(IOUtils.useInputStream(file), fileName);
     }
-    public void responseFile(InputStream in, String fileName){
+
+    public void responseFile(InputStream in, String fileName) {
         ContentType contentType = useContentType(fileName);
-        if (contentType != null) {
-            responseFile(in, contentType);
+        OutputStream out = useOutputStream(contentType, fileName, response);
+        if (waterMark != null) {
+            waterMark.apply(contentType, in, out);
         } else {
-            WebUtils.download(in, fileName, response);
+            IOUtils.copy(in, out);
         }
     }
 
-    public void responseFile(InputStream in, ContentType contentType)
-            throws IOException, DocumentException {
+    public void responseFile(InputStream in, ContentType contentType) {
         response.setContentType(contentType.getMimeType());
-        OutputStream out = response.getOutputStream();
-        WaterMarkConfig waterMarkConfig = SpringContextHolder.getBean(WaterMarkConfig.class);
-        applyWaterMark(contentType, useWaterMark(contentType, waterMark), in, out);
+        OutputStream out = useOutputStream(contentType, response);
+        if (waterMark != null) {
+            waterMark.apply(contentType, in, out);
+        } else {
+            IOUtils.copy(in, out);
+        }
     }
-
-   
 
     /**
      * 响应文件
@@ -111,70 +109,8 @@ public class ExportBiz {
      */
     public void responsePdf(String templateName, Object model, String fileName) {
         String html = RenderUtils.freeMarkerRender(model, templateName);
-        if (StringUtils.hasText(fileName)) {
-            WebUtils.downloadHeader(fileName, response);
-        } else {
-            WebUtils.setHeader(CONTENT_TYPE_PDF.getMimeType(), response);
-        }
-        try {
-            PdfUtils.export(html, response.getOutputStream(), waterMark, password);
-        } catch (IOException e) {
-            throw new RuntimeException("导出PDF异常：" + e.getMessage(), e);
-        }
-    }
-
-    public void applyWaterMark(ContentType contentType, String waterMark, InputStream in,
-            OutputStream out) {
-        try {
-            if (!StringUtils.hasText(waterMark)) {
-                IOUtils.copy(in, out);
-                return;
-            }
-            if (ExportBiz.CONTENT_TYPE_PDF.equals(contentType)) {
-                WaterMarkUtils.addTxtWaterMaker(in, out, waterMark, StyleUtils.convertColor(this.getPdfColor()));
-            } else if (WebUtils.CONTENT_TYPE_MSWORD.equals(contentType)) {
-                WaterMarkUtils.wordWaterMark(in, out, StyleUtils.convertColor(this.getWordColor()), waterMark);
-            } else if (ContentType.IMAGE_JPEG.equals(contentType)
-                    || ContentType.IMAGE_GIF.equals(contentType)
-                    || ContentType.IMAGE_PNG.equals(contentType)) {
-                String formatName = "JPG";
-                if (ContentType.IMAGE_PNG.equals(contentType)) {
-                    formatName = "PNG";
-                } else if (ContentType.IMAGE_GIF.equals(contentType)) {
-                    formatName = "GIF";
-                }
-                WaterMarkUtils.mark(in, out, formatName, StyleUtils.convertColor(this.getImageColor()),
-                        waterMark);
-            } else {
-                IOUtils.copy(in, out);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (DocumentException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-        }
-    }
-
-    private String useWaterMark(ContentType contentType, String waterMark) {
-        if (StringUtils.hasText(waterMark)) {
-            return waterMark;
-        }
-        String username = ActionInfo.currUsername();
-        if (!StringUtils.hasText(username)) {
-            return waterMark;
-        }
-        if (ExportBiz.CONTENT_TYPE_PDF.equals(contentType)) {
-            return this.getPdfText() + "-" + username;
-        } else if (ExportBiz.CONTENT_TYPE_MSWORD.equals(contentType)) {
-            return this.getWordText() + "-" + username;
-        } else if (ContentType.IMAGE_JPEG.equals(contentType) || ContentType.IMAGE_GIF.equals(contentType)
-                || ContentType.IMAGE_PNG.equals(contentType)) {
-            return this.getImageText() + "-" + username;
-        }
-        return waterMark;
+        OutputStream out = useOutputStream(fileName, "pdf", response);
+        PdfUtils.transformPdf(html, out, waterMark, password);
     }
 
     public static ContentType useContentType(String type) {
@@ -188,21 +124,21 @@ public class ExportBiz {
         }
         type = type.toLowerCase();
         if ("pdf".equals(type)) {
-            contentType = WebUtils.CONTENT_TYPE_PDF;
+            contentType = CONTENT_TYPE_PDF;
         } else if (type.equals("doc")) {
-            contentType = WebUtils.CONTENT_TYPE_MSWORD;
+            contentType = CONTENT_TYPE_MSWORD;
         } else if (type.equals("docx") || type.equals("word")) {
-            contentType = WebUtils.CONTENT_TYPE_DOCX;
+            contentType = CONTENT_TYPE_DOCX;
         } else if (type.equals("xls")) {
-            contentType = WebUtils.CONTENT_TYPE_MSEXCEL;
+            contentType = CONTENT_TYPE_MSEXCEL;
         } else if (type.equals("xlsx") || type.equals("excel")) {
-            contentType = WebUtils.CONTENT_TYPE_XLSX;
+            contentType = CONTENT_TYPE_XLSX;
         } else if (type.equals("jpg") || type.equals("jpeg")) {
-            contentType = WebUtils.CONTENT_TYPE_IMAGE_JPEG;
+            contentType = CONTENT_TYPE_IMAGE_JPEG;
         } else if (type.equals("gif")) {
-            contentType = WebUtils.CONTENT_TYPE_IMAGE_GIF;
+            contentType = CONTENT_TYPE_IMAGE_GIF;
         } else if (type.equals("png")) {
-            contentType = WebUtils.CONTENT_TYPE_IMAGE_PNG;
+            contentType = CONTENT_TYPE_IMAGE_PNG;
         }
         return contentType;
     }
@@ -242,7 +178,7 @@ public class ExportBiz {
         ExcelUtils.exportExcel(model, template, useOutputStream(fileName, "excel"));
     }
 
-     /**
+    /**
      * 下载简单(纯单表)的Excel模板
      * 
      */
@@ -252,6 +188,7 @@ public class ExportBiz {
         model.put("headList", headList);
         exportExcel(model, fileName, "commonSimpleTemplate.xlsx");
     }
+
     /**
      * 导出Excel
      * 
@@ -294,7 +231,7 @@ public class ExportBiz {
      */
     public <M> void exportPdf(M model, String fileName, String template) {
         String html = RenderUtils.freeMarkerRender(model, template);
-        PdfUtils.export(html, useOutputStream(fileName, "pdf"), waterMark, password);
+        PdfUtils.transformPdf(html, useOutputStream(fileName, "pdf"), waterMark, password);
     }
 
     /**
@@ -401,7 +338,7 @@ public class ExportBiz {
     }
 
     public void responseFile(HttpServletResponse response, InputStream in, String fileName) {
-        IOUtils.copy(in, useOutputStream(fileName, useContentType(fileName), response));
+        IOUtils.copy(in, useOutputStream(useContentType(fileName), fileName, response));
     }
 
     public OutputStream useOutputStream(String fileName, String type) {
@@ -419,7 +356,11 @@ public class ExportBiz {
         workbook.write(response.getOutputStream());
     }
 
-    public static OutputStream useOutputStream(String fileName, ContentType contentType, HttpServletResponse response) {
+    public static OutputStream useOutputStream(ContentType contentType, HttpServletResponse response) {
+        return useOutputStream(contentType, null, response);
+    }
+
+    public static OutputStream useOutputStream(ContentType contentType, String fileName, HttpServletResponse response) {
         if (contentType == null) {
             WebUtils.downloadHeader(fileName, response);
         } else {
@@ -433,16 +374,25 @@ public class ExportBiz {
         }
     }
 
+    public static OutputStream useOutputStream(String fileName, HttpServletResponse response) {
+        return useOutputStream(fileName, "file", response);
+    }
+
     public static OutputStream useOutputStream(String fileName, String type, HttpServletResponse response) {
         if (StringUtils.hasText(fileName)) {
             WebUtils.downloadHeader(fileName, response);
-        } else if ("pdf".equals(type)) {
-            response.setContentType(CONTENT_TYPE_PDF.getMimeType());
+        } else {
+            ContentType contentType = useContentType(type);
+            if (contentType != null) {
+                response.setContentType(CONTENT_TYPE_PDF.getMimeType());
+            }
         }
         try {
             return response.getOutputStream();
         } catch (IOException e) {
-            WebUtils.logger.error("导出" + type + "失败：" + e.getMessage(), e);
+            String typeName = (("type == null||file".equals(type)) ? "文件" : type);
+            WebUtils.logger.error("导出" + typeName + "失败：" + e.getMessage(),
+                    e);
             throw new RuntimeException(e);
         }
     }

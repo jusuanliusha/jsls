@@ -40,11 +40,9 @@ public class ReflectionUtils {
                     Object value = field.get(null);
                     map.put(field.getName(), (D) value);
                 } catch (IllegalArgumentException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    // ignore
                 } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    // ignore
                 }
             }
         }
