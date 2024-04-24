@@ -33,7 +33,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder;
+import org.jxls.common.Context;
+import org.jxls.expression.JexlExpressionEvaluator;
+import org.jxls.transform.poi.PoiTransformer;
+import org.jxls.util.JxlsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -382,16 +385,29 @@ public class ExcelUtils {
     /**
      * 转换excel
      * 
-     * @param templateName
+     * @param is
      * @param os
      * @param model
-     * @throws IOException
      */
     public static void transformExcel(InputStream is, OutputStream os, Map<String, Object> model) {
-        JxlsPoiTemplateFillerBuilder.newInstance()
-                .withTemplate(is)
-                .build()
-                .fill(model, () -> os);
+        Context context = PoiTransformer.createInitialContext();
+        context.putVar("jx", new ExcelUtils());
+        if (model != null) {
+            for (Map.Entry<String, Object> entry : model.entrySet()) {
+                context.putVar(entry.getKey(), entry.getValue());
+            }
+        }
+        JxlsHelper jxlsHelper = JxlsHelper.getInstance();
+        // 必须要这个，否者表格函数统计会错乱
+        jxlsHelper.setUseFastFormulaProcessor(false);
+        PoiTransformer transformer = (PoiTransformer) jxlsHelper.createTransformer(is, os);
+        try {
+            jxlsHelper.processTemplate(context, transformer);
+            transformer.getWorkbook();
+        } catch (IOException e) {
+            logger.error("生成Excel异常:" + e.getMessage(), e);
+            throw new RuntimeException("生成Excel异常:" + e.getMessage(), e);
+        }
     }
 
     public static InputStream useTemplateInputStream(String templateName) {

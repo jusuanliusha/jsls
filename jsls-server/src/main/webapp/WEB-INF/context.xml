@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+
+    <!-- 报表 oracle数据源-->
+    <Resource name="reportOracle" auth="Container" type="javax.sql.DataSource"
+              maxActive="50"
+              maxIdle="10"
+              maxWait="10000"
+              username="jsls"
+              password="xxx"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@localhost:1521:kaifadb1"/>
+    <!-- 数据中心 oracle数据源-->
+    <Resource name="dbcenterOracle" auth="Container" type="javax.sql.DataSource"
+              maxActive="50"
+              maxIdle="10"
+              maxWait="10000"
+              username="jsls"
+              password="xxx"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@localhost:1521:tadbtest"/>
+    <!-- 金电 oracle数据源-->
+    <Resource name="jdOracle" auth="Container" type="javax.sql.DataSource"
+              maxActive="50"
+              maxIdle="10"
+              maxWait="10000"
+              username="jsls"
+              password="xxx"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@localhost:1521:testdb2"/>
+    <!-- 蚂蚁 oracle数据源-->
+    <Resource name="myOracle" auth="Container" type="javax.sql.DataSource"
+              maxActive="50"
+              maxIdle="10"
+              maxWait="10000"
+              username="jsls"
+              password="xxx"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@localhost:1521:orcl"/>
+    <!-- 嬴通mysql数据源-->
+    <Resource name="ytMysql" auth="Container" type="javax.sql.DataSource"
+              maxActive="50"
+              maxIdle="10"
+              maxWait="10000"
+              username="jsls"
+              password="xxx"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/data_platform?userUnicode-true&amp;serverTimezone=GMT%2B8&amp;characterEncoding=UTF-8"/>
+</Context>

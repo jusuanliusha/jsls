@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <!-- JNDI配置 -->
+    <resource-ref>
+        <description>oracle Connection</description>
+        <res-ref-name>java:comp/env/reportOracle</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>dbcenterOracle Connection</description>
+        <res-ref-name>java:comp/env/dbcenterOracle</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>jdOracle Connection</description>
+        <res-ref-name>java:comp/env/jdOracle</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>jdOracle Connection</description>
+        <res-ref-name>java:comp/env/myOracle</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>mysql Connection</description>
+        <res-ref-name>java:comp/env/ytMysql</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:devtool_applicationContext.xml,classpath:applicationContext.xml
+        </param-value>
+    </context-param>
+
+
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- Web 应用根目录以该属性名添加到系统参数中-->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>webapp.root</param-value>
+    </context-param>
+    <!-- 负责将 Web 应用根目录以 webAppRootKey 上下文参数指定的属性名添加到系统参数中 -->
+    <listener>
+        <listener-class>
+            org.springframework.web.util.WebAppRootListener
+        </listener-class>
+    </listener>
+    <!-- sso begin -->
+    <filter>
+        <filter-name>SSOFilter</filter-name>
+        <filter-class>com.trust.sso.client.filter.SSOFilter</filter-class>
+        <init-param>
+            <param-name>serverBaseUrl</param-name>
+            <param-value>http://192.168.52.32:8050/SSOclientWeb</param-value>
+        </init-param>
+        <init-param>
+            <param-name>serverInnerAddress</param-name>
+            <param-value>http://192.168.52.32:8050/SSOclientWeb</param-value>
+        </init-param>
+        <init-param>
+            <param-name>notLoginOnFail</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>systemid</param-name>
+            <param-value>REPORTMANAGE</param-value>
+        </init-param>
+        <init-param>
+            <param-name>excludes</param-name>
+            <param-value>/(?!ssoLogin).*</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>SSOFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/forbidden.jsp</location>
+    </error-page>
+    <!-- sso end -->
+
+    <filter>
+        <filter-name>sessionFilter</filter-name>
+        <filter-class>com.jsls.server.filter.SessionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sessionFilter</filter-name>
+        <url-pattern>*.mvc</url-pattern>
+        <url-pattern>*.action</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>sessionAppFilter</filter-name>
+        <filter-class>com.jsls.server.filter.SessionAppFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sessionAppFilter</filter-name>
+        <url-pattern>*.app</url-pattern>
+    </filter-mapping>
+    <!--<listener>-->
+    <!--<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>-->
+    <!--</listener>-->
+
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>*.action</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+
+
+    <welcome-file-list>
+        <welcome-file>/jsp/main.jsp</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:chenxk-spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>*.mvc</url-pattern>
+        <url-pattern>*.app</url-pattern>
+        <url-pattern>/archive/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>HiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>*.mvc</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>HiddenHttpMethodFilter</filter-name>
+        <url-pattern>*.mvc</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>com.jsls.server.listener.TokenManagerSessionListener</listener-class>
+    </listener>
+
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
+</web-app>

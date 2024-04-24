@@ -21,7 +21,7 @@
 		<mybatis.version>3.4.2</mybatis.version>
 		<shiro.version>1.7.1</shiro.version>
 		<poi.version>5.2.2</poi.version>
-		<jxls.version>3.0.0</jxls.version>
+		<jxls.version>2.14.0</jxls.version>
 		<spire.version>11.7.0</spire.version>
 	</properties>
 	<dependencies>
@@ -34,6 +34,16 @@
 			<groupId>org.jxls</groupId>
 			<artifactId>jxls-poi</artifactId>
 			<version>${jxls.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls-poi</artifactId>
+			<version>${jxls.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jxls</groupId>
+			<artifactId>jxls-jexcel</artifactId>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
