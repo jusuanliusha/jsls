@@ -25,6 +25,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.jsls</groupId>
+			<artifactId>jsls-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
 			<scope>provided</scope>
