@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.util.StringUtils;
 
+import com.jsls.config.AppConfig;
 import com.jsls.util.SpringContextHolder;
 
 import lombok.Data;
@@ -32,7 +33,7 @@ public abstract class AbstractEvent extends ApplicationEvent {
     private Map<String, Object> factors = new HashMap<String, Object>();
 
     public AbstractEvent(String eventName, String scene) {
-        super((String) SpringContextHolder.resolveExpression("${spring.application.name}"));
+        super((String) SpringContextHolder.getBean(AppConfig.class).getSpringAppName());
         this.eventName = eventName;
         this.scene = scene;
     }
@@ -74,9 +75,8 @@ public abstract class AbstractEvent extends ApplicationEvent {
         }
         try {
             if (StringUtils.hasText(topic)) {
-                // MessageProducer messageProducer =
-                // SpringContextHolder.getBean(MessageProducer.class);
-                // messageProducer.send(this, topic);
+                Publisher producer = SpringContextHolder.getBean(Publisher.class);
+                producer.publishEvent(this, topic);
             } else {
                 SpringContextHolder.publishEvent(this);
             }
