@@ -23,7 +23,6 @@ public class DateUtils {
 
 	public static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
-
 	public static final String DATE_FORMAT_YYYYMMDD = "yyyyMMdd";
 	public static final String DATE_FORMAT_YYYYMD = "yyyy/M/d";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
@@ -120,7 +119,7 @@ public class DateUtils {
 			}
 			if (datePart.contains("/")) {
 				dateFmt = DATE_FORMAT_YYYYMD;
-			} else if (datePart.length() == DATE_FORMAT_YYYYMMDD.length()) {
+			} else if (!datePart.contains("-")) {
 				dateFmt = DATE_FORMAT_YYYYMMDD;
 			}
 			String format = dateFmt;
