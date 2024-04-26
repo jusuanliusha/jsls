@@ -23,7 +23,9 @@ public class DateUtils {
 
 	public static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
+
 	public static final String DATE_FORMAT_YYYYMMDD = "yyyyMMdd";
+	public static final String DATE_FORMAT_YYYYMD = "yyyy/M/d";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DATE = DATE_FORMAT_YYYY_MM_DD;
 	public static final String DATE_FORMAT_DATETIME = "yyyy-MM-dd HH:mm:ss";
@@ -94,24 +96,36 @@ public class DateUtils {
 
 	public static Date smartParseDate(String source) {
 		if (StringUtils.hasText(source)) {
-			String format = DATE_FORMAT_DATE;
 			String useSource = source.replace("T", " ");
-			useSource = useSource.replace("/", "-");
 			String timeZone = null;
 			if (source.endsWith("Z")) {
 				timeZone = " UTC";
 				useSource = useSource.substring(0, useSource.length() - 1);
 			}
-			if (useSource.length() == DATE_FORMAT_YYYYMMDD.length()) {
-				format = DATE_FORMAT_YYYYMMDD;
-			} else if (useSource.length() == DATE_FORMAT_TIMESTAMP.length()) {
-				if (useSource.charAt(useSource.length() - 4) == '.') {
-					format = "yyyy-MM-dd HH:mm:ss.SSS";
-				} else {
-					format = DATE_FORMAT_TIMESTAMP;
+			String datePart = useSource;
+			String dateFmt = DATE_FORMAT_DATE;
+			String timeFmt = null;
+			int idx = useSource.indexOf(" ");
+			if (idx > 0) {
+				timeFmt = "HH:mm:ss";
+				datePart = useSource.substring(0, idx);
+				String timePart = useSource.substring(idx + 1);
+				if (timePart.length() > timeFmt.length()) {
+					if (timePart.charAt(timePart.length() - 4) == '.') {
+						timeFmt = "HH:mm:ss.SSS";
+					} else {
+						timeFmt = "HH:mm:ss,SSS";
+					}
 				}
-			} else if (useSource.length() == DATE_FORMAT_DATETIME.length()) {
-				format = DATE_FORMAT_DATETIME;
+			}
+			if (datePart.contains("/")) {
+				dateFmt = DATE_FORMAT_YYYYMD;
+			} else if (datePart.length() == DATE_FORMAT_YYYYMMDD.length()) {
+				dateFmt = DATE_FORMAT_YYYYMMDD;
+			}
+			String format = dateFmt;
+			if (timeFmt != null) {
+				format += " " + timeFmt;
 			}
 			if (timeZone != null) {
 				useSource += timeZone;
